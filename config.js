@@ -7,6 +7,9 @@ const config = {
   channelLink: "https://whatsapp.com/channel/0029VbB47ttDDmFNztpnZf2m",
   channelJid: "0029VbB47ttDDmFNztpnZf2m@newsletter",
   
+  // Railway Variables se Session ID uthane ke liye
+  sessionId: process.env.SESSION_ID || "", 
+
   version: "5.0.0",
   prefix: ".",
   
