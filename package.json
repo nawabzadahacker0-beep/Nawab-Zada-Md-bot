@@ -4,8 +4,10 @@
   "description": "NAWAB ZADA MD Bot - for testing",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "pm2": "pm2 start index.js --name nawab-bot"
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "@whiskeysockets/baileys": "^6.8.0",
@@ -13,7 +15,6 @@
     "pino": "^9.0.0",
     "qrcode-terminal": "^0.12.0",
     "axios": "^1.7.0",
-    "node-cache": "^5.1.2",
-    "crypto": "^1.0.1"
+    "node-cache": "^5.1.2"
   }
 }
