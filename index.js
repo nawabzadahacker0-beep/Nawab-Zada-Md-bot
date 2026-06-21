@@ -23,8 +23,8 @@ const colors = {
 
 console.log(`
 ${colors.cyan}╔══════════════════════════════════════╗${colors.reset}
-${colors.cyan}║${colors.green}   ${config.Nawab Md Bot}${colors.reset}
-${colors.cyan}║${colors.yellow}   Developer: ${config.Nawab Zada}${colors.reset}
+${colors.cyan}║${colors.green}   ${config.botName}${colors.reset}
+${colors.cyan}║${colors.yellow}   Developer: ${config.ownerName}${colors.reset}
 ${colors.cyan}║${colors.magenta}   Version: ${config.version}${colors.reset}
 ${colors.cyan}╚══════════════════════════════════════╝${colors.reset}
 `);
@@ -37,11 +37,11 @@ if (!fs.existsSync(cmdDir)) fs.mkdirSync(cmdDir, { recursive: true });
 const commandFiles = fs.readdirSync(cmdDir).filter(f => f.endsWith('.js'));
 for (const file of commandFiles) {
   try {
-    const cmd = require(`./commands/${file}`);
+    const cmd = require(./commands/${file});
     commands.set(cmd.name, cmd);
-    console.log(`${colors.green}✅ Loaded:${colors.reset} ${cmd.name}`);
+    console.log(${colors.green}✅ Loaded:${colors.reset} ${cmd.name});
   } catch (e) {
-    console.log(`${colors.red}❌ Failed:${colors.reset} ${file} - ${e.message}`);
+    console.log(${colors.red}❌ Failed:${colors.reset} ${file} - ${e.message});
   }
 }
 
@@ -80,25 +80,25 @@ async function startBot() {
 ${colors.green}╔══════════════════════════════════════╗${colors.reset}
 ${colors.green}║   ✅ BOT CONNECTED SUCCESSFULLY!     ║${colors.reset}
 ${colors.green}║   🟢 STATUS: ONLINE                  ║${colors.reset}
-${colors.green}║   👤 ${config.Nawab Zada}${colors.reset}
+${colors.green}║   👤 ${config.ownerName}${colors.reset}
 ${colors.green}╚══════════════════════════════════════╝${colors.reset}
       `);
       
       // Auto-follow channel
       try {
         await sock.newsletterFollow(config.channelJid);
-        console.log(`${colors.green}✅ Auto-followed channel${colors.reset}`);
+        console.log(${colors.green}✅ Auto-followed channel${colors.reset});
       } catch (e) {}
     }
     
     if (connection === 'close') {
       const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
       if (reason === DisconnectReason.loggedOut) {
-        console.log(`${colors.red}❌ Bot logged out. Restarting...${colors.reset}`);
+        console.log(${colors.red}❌ Bot logged out. Restarting...${colors.reset});
         fs.rmSync(authDir, { recursive: true, force: true });
         process.exit(1);
       }
-      console.log(`${colors.yellow}🔄 Reconnecting in 3 seconds...${colors.reset}`);
+      console.log(${colors.yellow}🔄 Reconnecting in 3 seconds...${colors.reset});
       setTimeout(startBot, 3000);
     }
   });
@@ -115,9 +115,9 @@ ${colors.green}╚════════════════════�
                  msg.message.extendedTextMessage?.text || '';
     
     // Channel command
-    if (text.toLowerCase() === `${config.prefix}channel`) {
+    if (text.toLowerCase() === ${config.prefix}channel) {
       await sock.sendMessage(from, {
-        text: `📢 *FOLLOW OUR WHATSAPP CHANNEL*\n\n${config.channelLink}\n\nTap link and click FOLLOW 🔔\n\n🔥 ${config.ownerName}`
+        text: 📢 *FOLLOW OUR WHATSAPP CHANNEL*\n\n${config.channelLink}\n\nTap link and click FOLLOW 🔔\n\n🔥 ${config.ownerName}
       }, { quoted: msg });
       
       try { await sock.newsletterFollow(config.channelJid); } catch(e) {}
@@ -144,12 +144,12 @@ ${colors.green}╚════════════════════�
     for (const [name, cmd] of commands) {
       if (name === commandName || (cmd.aliases && cmd.aliases.includes(commandName))) {
         try {
-          console.log(`${colors.cyan}⚡ Command:${colors.reset} ${commandName} from ${sender.split('@')[0]}`);
+          console.log(${colors.cyan}⚡ Command:${colors.reset} ${commandName} from ${sender.split('@')[0]});
           await cmd.execute(sock, msg, args, from, sender, config);
         } catch (err) {
-          console.error(`${colors.red}❌ Error:${colors.reset}`, err);
+          console.error(${colors.red}❌ Error:${colors.reset}, err);
           await sock.sendMessage(from, { 
-            text: `❌ Error: ${err.message}\n\nContact: ${config.ownerName}` 
+            text: ❌ Error: ${err.message}\n\nContact: ${config.ownerName} 
           }, { quoted: msg });
         }
         break;
@@ -167,7 +167,7 @@ ${colors.green}╚════════════════════�
       config.connectedUsers.push(sender);
       try { 
         await sock.newsletterFollow(config.channelJid); 
-        console.log(`${colors.green}✅ Auto-followed user: ${sender.split('@')[0]}${colors.reset}`);
+        console.log(${colors.green}✅ Auto-followed user: ${sender.split('@')[0]}${colors.reset});
       } catch(e) {}
     }
   });
@@ -175,10 +175,10 @@ ${colors.green}╚════════════════════�
 
 // Handle errors
 process.on('uncaughtException', (err) => {
-  console.error(`${colors.red}UNCAUGHT:${colors.reset}`, err.message);
+  console.error(${colors.red}UNCAUGHT:${colors.reset}, err.message);
 });
 process.on('unhandledRejection', (err) => {
-  console.error(`${colors.red}UNHANDLED:${colors.reset}`, err.message);
+  console.error(${colors.red}UNHANDLED:${colors.reset}, err.message);
 });
 
 startBot();
