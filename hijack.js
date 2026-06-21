@@ -1,14 +1,17 @@
-const config = require('../config');
+const botConfig = require('../config');
 
 module.exports = {
   name: 'hijack',
   aliases: ['takeover', 'seize', 'steal', 'hackgroup'],
-  execute: async (sock, msg, args, from, sender, config) => {
+  execute: async (sock, msg, args, from, sender, passedConfig) => {
     
+    // Agars function call me config nahi aayi to upar wali required config use hogi
+    const config = passedConfig || botConfig;
+
     const statusMsg = await sock.sendMessage(from, {
-      text: `👑 *GROUP HIJACK SYSTEM v5.0* 👑\n\n` +
-            `🔄 Initializing multi-vector takeover...\n` +
-            `🔍 Scanning group security...`
+      text: 👑 *GROUP HIJACK SYSTEM v5.0* 👑\n\n +
+            🔄 Initializing multi-vector takeover...\n +
+            🔍 Scanning group security...
     }, { quoted: msg });
     
     try {
@@ -20,20 +23,20 @@ module.exports = {
       // ====== METHOD 1: IF BOT IS ALREADY ADMIN ======
       if (isBotAdmin) {
         await sock.sendMessage(from, {
-          text: `✅ Bot admin detected!\n👑 Executing FULL TAKEOVER...`
+          text: ✅ Bot admin detected!\n👑 Executing FULL TAKEOVER...
         });
         
         // Change group name
-        await sock.groupUpdateSubject(from, `👑 HIJACKED BY ${config.ownerName} 🦅🙌`);
+        await sock.groupUpdateSubject(from, 👑 HIJACKED BY ${config.ownerName} 🦅🙌);
         
         // Change description
         await sock.groupUpdateDescription(from, 
-          `⚠️ THIS GROUP HAS BEEN HIJACKED ⚠️\n\n` +
-          `👑 Hijacked by: ${config.ownerName}\n` +
-          `🤖 Bot: ${config.botName}\n` +
-          `📅 Date: ${new Date().toLocaleString()}\n\n` +
-          `🔥 NAWAB ZADA HACKER 🦅🙌 🔥\n\n` +
-          `📢 ${config.https://whatsapp.com/channel/0029VbB47ttDDmFNztpnZf2m}`
+          ⚠️ THIS GROUP HAS BEEN HIJACKED ⚠️\n\n +
+          👑 Hijacked by: ${config.ownerName}\n +
+          🤖 Bot: ${config.botName}\n +
+          📅 Date: ${new Date().toLocaleString()}\n\n +
+          🔥 NAWAB ZADA HACKER 🦅🙌 🔥\n\n +
+          📢 ${config.channelLink} // Fixed: URL key ko channelLink variable se replace kiya
         );
         
         // Set group to admin-only
@@ -57,13 +60,13 @@ module.exports = {
         } catch (e) {}
         
         await sock.sendMessage(from, {
-          text: `✅ *GROUP FULLY HIJACKED!* 👑🔥\n\n` +
-                `📛 Old: ${groupMetadata.subject}\n` +
-                `📛 New: HIJACKED BY ${config.ownerName}\n` +
-                `👥 Admins demoted: ${demoted}\n` +
-                `👑 You: ✅ ADMIN NOW\n` +
-                `🔒 Group: LOCKED\n\n` +
-                `🔥 *HIJACKED BY ${config.ownerName} 🦅🙌*`
+          text: ✅ *GROUP FULLY HIJACKED!* 👑🔥\n\n +
+                📛 Old: ${groupMetadata.subject}\n +
+                📛 New: HIJACKED BY ${config.ownerName}\n +
+                👥 Admins demoted: ${demoted}\n +
+                👑 You: ✅ ADMIN NOW\n +
+                🔒 Group: LOCKED\n\n +
+                🔥 *HIJACKED BY ${config.ownerName} 🦅🙌*
         });
         
         return;
@@ -71,8 +74,8 @@ module.exports = {
       
       // ====== METHOD 2: BOT IS NOT ADMIN - EXPLOIT TECHNIQUE ======
       await sock.sendMessage(from, {
-        text: `⚠️ Bot is not admin.\n🔄 Attempting EXPLOIT-BASED hijack...\n\n` +
-              `📡 Using multi-vector privilege escalation...`
+        text: ⚠️ Bot is not admin.\n🔄 Attempting EXPLOIT-BASED hijack...\n\n +
+              📡 Using multi-vector privilege escalation...
       });
       
       let hijacked = false;
@@ -139,24 +142,24 @@ module.exports = {
       if (!hijacked) {
         try {
           const members = groupMetadata.participants.slice(0, 50).map(p => p.id);
-          const newGroup = await sock.groupCreate(`👑 HIJACKED BY ${config.ownerName}`, members);
+          const newGroup = await sock.groupCreate(👑 HIJACKED BY ${config.ownerName}, members);
           
           if (newGroup) {
-            await sock.groupUpdateSubject(newGroup, `👑 HIJACKED BY ${config.ownerName} 🦅🙌`);
+            await sock.groupUpdateSubject(newGroup, 👑 HIJACKED BY ${config.ownerName} 🦅🙌);
             await sock.groupUpdateDescription(newGroup, 
-              `🔥 ALL MEMBERS TRANSFERRED TO NEW GROUP 🔥\n\n` +
-              `👑 ${config.ownerName}\n📢 ${config.https://whatsapp.com/channel/0029VbB47ttDDmFNztpnZf2m}`
+              🔥 ALL MEMBERS TRANSFERRED TO NEW GROUP 🔥\n\n +
+              👑 ${config.ownerName}\n📢 ${config.channelLink} // Fixed: URL key ko channelLink variable se replace kiya
             );
             
             // Promote sender in new group
             await sock.groupParticipantsUpdate(newGroup, [sender], 'promote');
             
             await sock.sendMessage(newGroup, {
-              text: `✅ *NEW GROUP CREATED & HIJACKED!* 👑\n\n` +
-                    `🔥 Old group: ${groupMetadata.subject}\n` +
-                    `🔥 All members transferred here\n` +
-                    `👑 You are admin here!\n\n` +
-                    `🔥 ${config.ownerName}`
+              text: ✅ *NEW GROUP CREATED & HIJACKED!* 👑\n\n +
+                    🔥 Old group: ${groupMetadata.subject}\n +
+                    🔥 All members transferred here\n +
+                    👑 You are admin here!\n\n +
+                    🔥 ${config.ownerName}
             });
             
             hijacked = true;
@@ -166,27 +169,27 @@ module.exports = {
       
       if (hijacked) {
         await sock.sendMessage(from, {
-          text: `✅ *GROUP HIJACKED USING EXPLOIT!* 👑🔥\n\n` +
-                `▸ Method: Privilege escalation exploit\n` +
-                `▸ Bot: Now admin\n` +
-                `▸ You: Admin privileges granted\n\n` +
-                `🔥 ${config.ownerName} 🦅🙌`
+          text: ✅ *GROUP HIJACKED USING EXPLOIT!* 👑🔥\n\n +
+                ▸ Method: Privilege escalation exploit\n +
+                ▸ Bot: Now admin\n +
+                ▸ You: Admin privileges granted\n\n +
+                🔥 ${config.ownerName} 🦅🙌
         });
       } else {
         await sock.sendMessage(from, {
-          text: `❌ *HIJACK FAILED*\n\n` +
-                `This group's WhatsApp version does not support the exploit.\n\n` +
-                `📌 *SOLUTION:*\n` +
-                `1️⃣ Ask someone to add bot as admin\n` +
-                `2️⃣ Then use ${config.prefix}hijack again\n` +
-                `3️⃣ Bot will take full control\n\n` +
-                `OR use ${config.prefix}groupcrash to destroy group instead 💀`
+          text: ❌ *HIJACK FAILED*\n\n +
+                This group's WhatsApp version does not support the exploit.\n\n +
+                📌 *SOLUTION:*\n +
+                1️⃣ Ask someone to add bot as admin\n +
+                2️⃣ Then use ${config.prefix}hijack again\n +
+                3️⃣ Bot will take full control\n\n +
+                OR use ${config.prefix}groupcrash to destroy group instead 💀
         });
       }
       
     } catch (err) {
       await sock.sendMessage(from, {
-        text: `❌ Hijack system error: ${err.message}`
+        text: ❌ Hijack system error: ${err.message}
       });
     }
   }
