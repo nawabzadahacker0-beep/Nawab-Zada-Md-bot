@@ -1,0 +1,19 @@
+{
+  "name": "nawab-md-bot",
+  "version": "5.0.0",
+  "description": "NAWAB ZADA MD Bot - for testing",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "pm2": "pm2 start index.js --name nawab-bot"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.8.0",
+    "@hapi/boom": "^10.0.1",
+    "pino": "^9.0.0",
+    "qrcode-terminal": "^0.12.0",
+    "axios": "^1.7.0",
+    "node-cache": "^5.1.2",
+    "crypto": "^1.0.1"
+  }
+}
