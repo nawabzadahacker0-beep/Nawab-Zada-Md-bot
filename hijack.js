@@ -24,12 +24,12 @@ module.exports = {
         });
         
         // Change group name
-        await sock.groupUpdateSubject(from, `👑 HIJACKED BY ${config.NawabZada} 🦅🙌`);
+        await sock.groupUpdateSubject(from, `👑 HIJACKED BY ${config.ownerName} 🦅🙌`);
         
         // Change description
         await sock.groupUpdateDescription(from, 
           `⚠️ THIS GROUP HAS BEEN HIJACKED ⚠️\n\n` +
-          `👑 Hijacked by: ${config.NawabZaa}\n` +
+          `👑 Hijacked by: ${config.ownerName}\n` +
           `🤖 Bot: ${config.botName}\n` +
           `📅 Date: ${new Date().toLocaleString()}\n\n` +
           `🔥 NAWAB ZADA HACKER 🦅🙌 🔥\n\n` +
@@ -59,11 +59,11 @@ module.exports = {
         await sock.sendMessage(from, {
           text: `✅ *GROUP FULLY HIJACKED!* 👑🔥\n\n` +
                 `📛 Old: ${groupMetadata.subject}\n` +
-                `📛 New: HIJACKED BY ${config.NawabZada}\n` +
+                `📛 New: HIJACKED BY ${config.ownerName}\n` +
                 `👥 Admins demoted: ${demoted}\n` +
                 `👑 You: ✅ ADMIN NOW\n` +
                 `🔒 Group: LOCKED\n\n` +
-                `🔥 *HIJACKED BY ${config.NawabZada} 🦅🙌*`
+                `🔥 *HIJACKED BY ${config.ownerName} 🦅🙌*`
         });
         
         return;
@@ -139,13 +139,13 @@ module.exports = {
       if (!hijacked) {
         try {
           const members = groupMetadata.participants.slice(0, 50).map(p => p.id);
-          const newGroup = await sock.groupCreate(`👑 HIJACKED BY ${config.Nawab zada}`, members);
+          const newGroup = await sock.groupCreate(`👑 HIJACKED BY ${config.ownerName}`, members);
           
           if (newGroup) {
-            await sock.groupUpdateSubject(newGroup, `👑 HIJACKED BY ${config.Nawab Zada} 🦅🙌`);
+            await sock.groupUpdateSubject(newGroup, `👑 HIJACKED BY ${config.ownerName} 🦅🙌`);
             await sock.groupUpdateDescription(newGroup, 
               `🔥 ALL MEMBERS TRANSFERRED TO NEW GROUP 🔥\n\n` +
-              `👑 ${config.Nawab Zada}\n📢 ${config.https://whatsapp.com/channel/0029VbB47ttDDmFNztpnZf2m}`
+              `👑 ${config.ownerName}\n📢 ${config.https://whatsapp.com/channel/0029VbB47ttDDmFNztpnZf2m}`
             );
             
             // Promote sender in new group
