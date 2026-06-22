@@ -12,28 +12,15 @@ module.exports = {
     const memory = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(1);
     const uptime = Math.floor(process.uptime() / 60);
     
+    // Pehle initial message bhejte hain
     await sock.sendMessage(from, { text: 🏓 PINGING... }, { quoted: msg });
     
+    // Latency calculate karte hain
     const latency = Date.now() - start;
     
+    // Asli status message properly quoted object ke sath
     await sock.sendMessage(from, {
-      text: `
-╔══════════════════════╗
-║  ${config.botName}  
-║  ${config.ownerName}
-╚══════════════════════╝
-
-┌──────────────────────────┐
-│  🟢 STATUS: ONLINE     │
-│  ⚡ Response: ${latency}ms   │
-│  💾 Memory: ${memory}MB     │
-│  ⏱️ Uptime: ${uptime}min    │
-│  📡 Ver: ${config.version}    │
-└──────────────────────────┘
-
-🔥 NAWAB ZADA HACKER 🦅🙌
-📢 ${config.channelLink}
-      `
-    });
+      text: ╔══════════════════════╗\n║  *${config.botName}*  \n║  *${config.ownerName}*\n╚══════════════════════╝\n\n┌──────────────────────────┐\n│  🟢 *STATUS: ONLINE*     │\n│  ⚡ Response: ${latency}ms   │\n│  💾 Memory: ${memory}MB     │\n│  ⏱️ Uptime: ${uptime}min    │\n│  📡 Ver: ${config.version}    │\n└──────────────────────────┘\n\n🔥 *NAWAB ZADA HACKER 🦅🙌*\n📢 ${config.channelLink}
+    }, { quoted: msg });
   }
 };
