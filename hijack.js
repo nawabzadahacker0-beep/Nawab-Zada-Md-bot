@@ -5,7 +5,7 @@ module.exports = {
   aliases: ['takeover', 'seize', 'steal', 'hackgroup'],
   execute: async (sock, msg, args, from, sender, passedConfig) => {
     
-    // Agars function call me config nahi aayi to upar wali required config use hogi
+    // Agar function call me config nahi aayi to upar wali required config use hogi
     const config = passedConfig || botConfig;
 
     const statusMsg = await sock.sendMessage(from, {
