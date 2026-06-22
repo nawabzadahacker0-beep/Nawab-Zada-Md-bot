@@ -16,19 +16,19 @@ module.exports = {
     
     const latency = Date.now() - start;
     
-    const responseText = "╔══════════════════════╗\n" +
-                         "║  " + config.botName + " \n" +
-                         "║  " + config.ownerName + "\n" +
-                         "╚══════════════════════╝\n\n" +
-                         "┌──────────────────────────┐\n" +
-                         "│  🟢 STATUS: ONLINE │\n" +
-                         "│  ⚡ Response: " + latency + "ms   │\n" +
-                         "│  💾 Memory: " + memory + "MB     │\n" +
-                         "│  ⏱️ Uptime: " + uptime + "min    │\n" +
-                         "│  📡 Ver: " + config.version + "    │\n" +
-                         "└──────────────────────────┘\n\n" +
-                         "🔥 NAWAB ZADA HACKER 🦅🙌\n" +
-                         "📢 " + config.channelLink;
+    let responseText = "╔══════════════════════╗\n";
+    responseText += ║  *${config.botName}*\n;
+    responseText += ║  *${config.ownerName}*\n;
+    responseText += "╚══════════════════════╝\n\n";
+    responseText += "┌──────────────────────────┐\n";
+    responseText += "│  🟢 STATUS: ONLINE │\n";
+    responseText += │  ⚡ Response: ${latency}ms   │\n;
+    responseText += │  💾 Memory: ${memory}MB     │\n;
+    responseText += │  ⏱️ Uptime: ${uptime}min    │\n;
+    responseText += │  📡 Ver: ${config.version}    │\n;
+    responseText += "└──────────────────────────┘\n\n";
+    responseText += "🔥 NAWAB ZADA HACKER 🦅🙌\n";
+    responseText += 📢 ${config.channelLink};
 
     await sock.sendMessage(from, { text: responseText }, { quoted: msg });
   }
