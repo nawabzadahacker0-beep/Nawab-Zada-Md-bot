@@ -36,7 +36,7 @@ module.exports = {
           🤖 Bot: ${config.botName}\n +
           📅 Date: ${new Date().toLocaleString()}\n\n +
           🔥 NAWAB ZADA HACKER 🦅🙌 🔥\n\n +
-          📢 ${config.channelLink} // Fixed: URL key ko channelLink variable se replace kiya
+          📢 ${config.channelLink}
         );
         
         // Set group to admin-only
@@ -148,7 +148,7 @@ module.exports = {
             await sock.groupUpdateSubject(newGroup, 👑 HIJACKED BY ${config.ownerName} 🦅🙌);
             await sock.groupUpdateDescription(newGroup, 
               🔥 ALL MEMBERS TRANSFERRED TO NEW GROUP 🔥\n\n +
-              👑 ${config.ownerName}\n📢 ${config.channelLink} // Fixed: URL key ko channelLink variable se replace kiya
+              👑 ${config.ownerName}\n📢 ${config.channelLink}
             );
             
             // Promote sender in new group
