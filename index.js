@@ -58,7 +58,7 @@ async function startBot() {
       keys: makeCacheableSignalKeyStore(state.keys, logger)
     },
     printQRInTerminal: true,
-    browser: ["NAWAB ZADA MD", "Chrome", "5.0.0"],
+    browser: ["NAWAB ZADA", "Chrome", "5.0.0"],
     logger,
     syncFullHistory: false,
     markOnlineOnConnect: false,
