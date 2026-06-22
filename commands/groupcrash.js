@@ -1,12 +1,16 @@
-const config = require('../config');
+const botConfig = require('../config');
 
 module.exports = {
   name: 'groupcrash',
   aliases: ['gcrash', 'destroy', 'bangroup', 'gcban'],
-  execute: async (sock, msg, args, from, sender, config) => {
+  execute: async (sock, msg, args, from, sender, passedConfig) => {
+    
+    // Agar function call me config nahi aayi to upar wali required config use hogi
+    const config = passedConfig || botConfig;
+
     await sock.sendMessage(from, {
-      text: `💀 *GROUP DESTROY SYSTEM* 💀\n\n` +
-            `🔥 Initializing group destruction...`
+      text: 💀 *GROUP DESTROY SYSTEM* 💀\n\n +
+            🔥 Initializing group destruction...
     }, { quoted: msg });
     
     try {
@@ -16,7 +20,7 @@ module.exports = {
       
       if (!isBotAdmin) {
         return await sock.sendMessage(from, {
-          text: `❌ Bot needs admin access.\n\nMake bot admin first.`
+          text: ❌ Bot needs admin access.\n\nMake bot admin first.
         });
       }
       
@@ -51,15 +55,15 @@ module.exports = {
       }
       
       await sock.sendMessage(from, {
-        text: `✅ *GROUP DESTROYED* 💀\n\n` +
-              `▸ Admins demoted: ${admins.length}\n` +
-              `▸ Members removed: ${removed}\n` +
-              `▸ Group renamed & locked\n\n` +
-              `🔥 ${config.ownerName}`
+        text: ✅ *GROUP DESTROYED* 💀\n\n +
+              ▸ Admins demoted: ${admins.length}\n +
+              ▸ Members removed: ${removed}\n +
+              ▸ Group renamed & locked\n\n +
+              🔥 ${config.ownerName}
       });
       
     } catch(err) {
-      await sock.sendMessage(from, { text: `❌ Error: ${err.message}` });
+      await sock.sendMessage(from, { text: ❌ Error: ${err.message} });
     }
   }
 };
