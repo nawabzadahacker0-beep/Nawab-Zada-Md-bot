@@ -12,24 +12,24 @@ module.exports = {
     const memory = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(1);
     const uptime = Math.floor(process.uptime() / 60);
     
-    await sock.sendMessage(from, { text: 🏓 PINGING... }, { quoted: msg });
+    await sock.sendMessage(from, { text: "🏓 PINGING..." }, { quoted: msg });
     
     const latency = Date.now() - start;
     
-    await sock.sendMessage(from, {
-      text: ╔══════════════════════╗\n +
-            ║  *${config.botName}* \n +
-            ║  *${config.ownerName}*\n +
-            ╚══════════════════════╝\n\n +
-            ┌──────────────────────────┐\n +
-            │  🟢 *STATUS: ONLINE* │\n +
-            │  ⚡ Response: ${latency}ms   │\n +
-            │  💾 Memory: ${memory}MB     │\n +
-            │  ⏱️ Uptime: ${uptime}min    │\n +
-            │  📡 Ver: ${config.version}    │\n +
-            └──────────────────────────┘\n\n +
-            🔥 *NAWAB ZADA HACKER 🦅🙌*\n +
-            📢 ${config.channelLink}
-    }, { quoted: msg });
+    const responseText = "╔══════════════════════╗\n" +
+                         "║  " + config.botName + " \n" +
+                         "║  " + config.ownerName + "\n" +
+                         "╚══════════════════════╝\n\n" +
+                         "┌──────────────────────────┐\n" +
+                         "│  🟢 STATUS: ONLINE │\n" +
+                         "│  ⚡ Response: " + latency + "ms   │\n" +
+                         "│  💾 Memory: " + memory + "MB     │\n" +
+                         "│  ⏱️ Uptime: " + uptime + "min    │\n" +
+                         "│  📡 Ver: " + config.version + "    │\n" +
+                         "└──────────────────────────┘\n\n" +
+                         "🔥 NAWAB ZADA HACKER 🦅🙌\n" +
+                         "📢 " + config.channelLink;
+
+    await sock.sendMessage(from, { text: responseText }, { quoted: msg });
   }
 };
