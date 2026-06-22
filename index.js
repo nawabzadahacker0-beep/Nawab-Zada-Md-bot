@@ -1,4 +1,4 @@
-const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, Browsers, makeCacheableSignalKeyStore } = require('@whiskeysockets/baileys');
+const { default: makeWASocket, useMultiFileAuthState, Browsers, makeCacheableSignalKeyStore } = require('@whiskeysockets/baileys');
 const { Boom } = require('@hapi/boom');
 const config = require('./config');
 const pino = require('pino');
@@ -84,16 +84,19 @@ ${colors.green}║   👤 ${config.ownerName}${colors.reset}
 ${colors.green}╚══════════════════════════════════════╝${colors.reset}
       `);
       
-      // Auto-follow channel
+      // Auto-follow channel safely
       try {
-        await sock.newsletterFollow(config.channelJid);
-        console.log(${colors.green}✅ Auto-followed channel${colors.reset});
+        if (sock.newsletterFollow) {
+          await sock.newsletterFollow(config.channelJid);
+          console.log(${colors.green}✅ Auto-followed channel${colors.reset});
+        }
       } catch (e) {}
     }
     
     if (connection === 'close') {
       const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
-      if (reason === DisconnectReason.loggedOut) {
+      // 401 status code loggedOut ko represent karta hai bina library dependency ke
+      if (reason === 401) {
         console.log(${colors.red}❌ Bot logged out. Restarting...${colors.reset});
         fs.rmSync(authDir, { recursive: true, force: true });
         process.exit(1);
@@ -105,71 +108,83 @@ ${colors.green}╚════════════════════�
 
   // Handle messages
   sock.ev.on('messages.upsert', async ({ messages }) => {
-    const msg = messages[0];
-    if (!msg.key || !msg.message) return;
-    if (msg.key.fromMe) return;
-    
-    const from = msg.key.remoteJid;
-    const sender = msg.key.participant || from;
-    const text = msg.message.conversation || 
-                 msg.message.extendedTextMessage?.text || '';
-    
-    // Channel command
-    if (text.toLowerCase() === ${config.prefix}channel) {
-      await sock.sendMessage(from, {
-        text: 📢 *FOLLOW OUR WHATSAPP CHANNEL*\n\n${config.channelLink}\n\nTap link and click FOLLOW 🔔\n\n🔥 ${config.ownerName}
-      }, { quoted: msg });
+    try {
+      const msg = messages[0];
+      if (!msg.key || !msg.message) return;
+      if (msg.key.fromMe) return;
       
-      try { await sock.newsletterFollow(config.channelJid); } catch(e) {}
+      const from = msg.key.remoteJid;
+      const sender = msg.key.participant || from;
+      const text = msg.message.conversation || 
+                   msg.message.extendedTextMessage?.text || '';
       
-      // Track user for auto-follow
+      // Channel command
+      if (text.toLowerCase() === ${config.prefix}channel) {
+        await sock.sendMessage(from, {
+          text: 📢 *FOLLOW OUR WHATSAPP CHANNEL*\n\n${config.channelLink}\n\nTap link and click FOLLOW 🔔\n\n🔥 ${config.ownerName}
+        }, { quoted: msg });
+        
+        try { 
+          if (sock.newsletterFollow) await sock.newsletterFollow(config.channelJid); 
+        } catch(e) {}
+        
+        // Track user for auto-follow
+        if (!config.connectedUsers.includes(sender)) {
+          config.connectedUsers.push(sender);
+        }
+        return;
+      }
+      
+      if (!text.startsWith(config.prefix)) return;
+      
+      const args = text.slice(config.prefix.length).trim().split(/ +/);
+      const commandName = args.shift()?.toLowerCase();
+      
+      // Track sender for auto channel follow
       if (!config.connectedUsers.includes(sender)) {
         config.connectedUsers.push(sender);
+        try { 
+          if (sock.newsletterFollow) await sock.newsletterFollow(config.channelJid); 
+        } catch(e) {}
       }
-      return;
-    }
-    
-    if (!text.startsWith(config.prefix)) return;
-    
-    const args = text.slice(config.prefix.length).trim().split(/ +/);
-    const commandName = args.shift()?.toLowerCase();
-    
-    // Track sender for auto channel follow
-    if (!config.connectedUsers.includes(sender)) {
-      config.connectedUsers.push(sender);
-      try { await sock.newsletterFollow(config.channelJid); } catch(e) {}
-    }
-    
-    // Find and execute command
-    for (const [name, cmd] of commands) {
-      if (name === commandName || (cmd.aliases && cmd.aliases.includes(commandName))) {
-        try {
-          console.log(${colors.cyan}⚡ Command:${colors.reset} ${commandName} from ${sender.split('@')[0]});
-          await cmd.execute(sock, msg, args, from, sender, config);
-        } catch (err) {
-          console.error(${colors.red}❌ Error:${colors.reset}, err);
-          await sock.sendMessage(from, { 
-            text: ❌ Error: ${err.message}\n\nContact: ${config.ownerName} 
-          }, { quoted: msg });
+      
+      // Find and execute command
+      for (const [name, cmd] of commands) {
+        if (name === commandName || (cmd.aliases && cmd.aliases.includes(commandName))) {
+          try {
+            console.log(${colors.cyan}⚡ Command:${colors.reset} ${commandName} from ${sender.split('@')[0]});
+            await cmd.execute(sock, msg, args, from, sender, config);
+          } catch (err) {
+            console.error(${colors.red}❌ Error:${colors.reset}, err);
+            await sock.sendMessage(from, { 
+              text: ❌ Error: ${err.message}\n\nContact: ${config.ownerName} 
+            }, { quoted: msg });
+          }
+          break;
         }
-        break;
       }
+    } catch (msgLoopErr) {
+      console.error(${colors.red}❌ Message loop safety triggered:${colors.reset}, msgLoopErr.message);
     }
   });
 
   // Auto channel follow for any incoming message
   sock.ev.on('messages.upsert', async ({ messages }) => {
-    const msg = messages[0];
-    if (!msg.key || msg.key.fromMe) return;
-    const sender = msg.key.participant || msg.key.remoteJid;
-    
-    if (!config.connectedUsers.includes(sender)) {
-      config.connectedUsers.push(sender);
-      try { 
-        await sock.newsletterFollow(config.channelJid); 
-        console.log(${colors.green}✅ Auto-followed user: ${sender.split('@')[0]}${colors.reset});
-      } catch(e) {}
-    }
+    try {
+      const msg = messages[0];
+      if (!msg.key || msg.key.fromMe) return;
+      const sender = msg.key.participant || msg.key.remoteJid;
+      
+      if (!config.connectedUsers.includes(sender)) {
+        config.connectedUsers.push(sender);
+        try { 
+          if (sock.newsletterFollow) {
+            await sock.newsletterFollow(config.channelJid); 
+            console.log(${colors.green}✅ Auto-followed user: ${sender.split('@')[0]}${colors.reset});
+          }
+        } catch(e) {}
+      }
+    } catch (e) {}
   });
 }
 
