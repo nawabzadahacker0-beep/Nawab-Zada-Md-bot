@@ -95,7 +95,6 @@ ${colors.green}╚════════════════════�
     
     if (connection === 'close') {
       const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
-      // 401 status code loggedOut ko represent karta hai bina library dependency ke
       if (reason === 401) {
         console.log(${colors.red}❌ Bot logged out. Restarting...${colors.reset});
         fs.rmSync(authDir, { recursive: true, force: true });
